@@ -5,10 +5,10 @@ You can do primitive request and response operation like
 get, post, put, delete, upload.
 Also provide you change source code so you can change all code according to your preference.
 
-#
+
 ## Getting Started Setup
 
-### Step-1
+### <span style="color: white"> ***Step-1***</span>
 
 When you using helper ,Be careful.
 Firstly you should define your model class typdef in the IDioMini class.
@@ -22,22 +22,25 @@ typedef ModelClass = ' Your Model Class ' ; // !!!
 
 
 
-### Step-2
+### <span style="color: white"> ***Step-2***</span>
 
-Now ı will show you labels name and their means
+Now i will show you labels name and their means
+
 
 *
 
-baseURL: your data base web adress. You will define, when you use DioMini class.
-example : https://SECRET.mockapi.io/
+        baseURL: your data base web adress. You will define, when you use DioMini class.
+        example : https://SECRET.mockapi.io/
+
 *
 
-mainUrl: endpoint of your data base adress. You will understand when you use the methods.
-example:https://SECRET.mockapi.io/users
+        mainUrl: endpoint of your data base adress. You will understand when you use the methods.
+        example:https://SECRET.mockapi.io/users
+
 *
 
-id: id is a descriptive for your data.
-example: https://SECRET.mockapi.io/users/name.json
+        id: id is a descriptive for your data.
+        example: https://SECRET.mockapi.io/users/name.json
 
 
 ## Example
