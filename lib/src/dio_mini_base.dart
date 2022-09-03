@@ -1,19 +1,15 @@
 // ignore_for_file: avoid_print
 import 'dart:io';
 import 'package:dio/dio.dart';
-import 'ex_model_class.dart'; // Delete after
-
-// !!! you must change StudentModel your ModelClass
-typedef ModelClass = NameModel; // !!!
-// !!!
 
 abstract class IDioMini {
   String baseUrl;
-
+  final dynamic model;
   late final Dio dio;
   late final FormData formData;
 
   IDioMini({
+    required this.model,
     required this.baseUrl,
   }) {
     dio = Dio(
@@ -30,74 +26,51 @@ abstract class IDioMini {
   }
 
   void dioSettings() {
-    dio.interceptors.add(InterceptorsWrapper(
-        onRequest: (options, handler) {
-      print(
-          '!Sending request to: ${options.path}');
+    dio.interceptors.add(InterceptorsWrapper(onRequest: (options, handler) {
+      print('!Sending request to: ${options.path}');
     }, onResponse: (response, handler) {
-      print(
-          'Response status code: ${response.statusCode.toString()}');
-      print(
-          'Response data: ${response.data.toString()}');
+      print('Response status code: ${response.statusCode.toString()}');
+      print('Response data: ${response.data.toString()}');
       return handler.next(response);
     }, onError: (DioError e, handler) {
-      print(
-          'Error received! Message is: ${e.message}');
+      print('Error received! Message is: ${e.message}');
       return handler.next(e);
     }));
   }
 
-  Future<List<ModelClass>?> getDataList(
-      {required String mainUrlName});
+  Future<List<dynamic>?> getDataList(String mainUrlName);
 
-  Future<ModelClass?> getData(
-      {required String mainUrlName,
-      required String id});
+  Future<dynamic> getData(String mainUrlName, String id);
 
-  Future<bool> postData(
-      {required ModelClass model,
-      required String mainUrl});
+  Future<bool> postData(String mainUrl);
 
-  Future<bool> putData(
-      {required ModelClass model,
-      required String id,
-      required String mainUrl});
+  Future<bool> putData(String id, String mainUrl);
 
-  Future<bool> deleteData(
-      {required String id,
-      required String mainUrl});
+  Future<bool> deleteData(String id, String mainUrl);
 
-  Future<void> uploadData({
-    required String dataPath,
-    required String fileName,
-    required String keyName,
-    required String mainUrl,
-  });
+  Future<void> uploadData(
+      String dataPath, String fileName, String keyName, String mainUrl);
 }
 
 class DioMini extends IDioMini {
   final String baseURL;
-
-  DioMini({required this.baseURL})
-      : super(baseUrl: baseURL);
+  final dynamic model;
+  DioMini({required this.model, required this.baseURL})
+      : super(model: model, baseUrl: baseURL);
 
   @override
-  Future<ModelClass?> getData(
-      {required String mainUrlName,
-      required String id}) async {
-    ModelClass? model;
+  Future<Map<String, dynamic>?> getData(String mainUrlName, String id) async {
     try {
-      Response userData = await dio.get(
-          '/$mainUrlName/$id'); // Maybe add '.json' your path :D
+      Response userData = await dio.get('/$mainUrlName/$id');
 
       final dataList = userData.data;
-      model = ModelClass.fromJson(dataList);
-      return model;
+      return dataList;
+      //
+
     } on DioError catch (e) {
       if (e.response != null) {
         print('Dio error!');
-        print(
-            'STATUS: ${e.response?.statusCode}');
+        print('STATUS: ${e.response?.statusCode}');
         print('DATA: ${e.response?.data}');
         print('HEADERS: ${e.response?.headers}');
       } else {
@@ -110,9 +83,7 @@ class DioMini extends IDioMini {
   }
 
   @override
-  Future<bool> postData(
-      {required ModelClass model,
-      required String mainUrl}) async {
+  Future<bool> postData(String mainUrl) async {
     try {
       await dio.post(
         '/$mainUrl',
@@ -126,10 +97,7 @@ class DioMini extends IDioMini {
   }
 
   @override
-  Future<bool> putData(
-      {required ModelClass model,
-      required String id,
-      required String mainUrl}) async {
+  Future<bool> putData(String id, String mainUrl) async {
     try {
       await dio.put(
         '/$mainUrl/$id',
@@ -142,12 +110,10 @@ class DioMini extends IDioMini {
     }
   }
 
+  // not for real time database.
   @override
   Future<void> uploadData(
-      {required String dataPath,
-      required String fileName,
-      required String keyName,
-      required String mainUrl}) async {
+      String dataPath, String fileName, String keyName, String mainUrl) async {
     File imageFile = File(dataPath);
 
     formData = FormData.fromMap({
@@ -166,9 +132,7 @@ class DioMini extends IDioMini {
   }
 
   @override
-  Future<bool> deleteData(
-      {required String id,
-      required String mainUrl}) async {
+  Future<bool> deleteData(String id, String mainUrl) async {
     try {
       await dio.delete('/$mainUrl/$id');
       return true;
@@ -179,25 +143,15 @@ class DioMini extends IDioMini {
   }
 
   @override
-  Future<List<ModelClass>?> getDataList(
-      {required String mainUrlName}) async {
-    List<ModelClass>? models;
+  Future<List<dynamic>?> getDataList(String mainUrlName) async {
     try {
-      Response data =
-          await dio.get('/$mainUrlName');
-      final userData = data.data;
+      Response data = await dio.get('/$mainUrlName');
 
-      if (userData is List) {
-        models = userData
-            .map((e) => ModelClass.fromJson(e))
-            .toList();
-      }
-      return models;
+      return data.data;
     } on DioError catch (e) {
       if (e.response != null) {
         print('Dio error!');
-        print(
-            'STATUS: ${e.response?.statusCode}');
+        print('STATUS: ${e.response?.statusCode}');
         print('DATA: ${e.response?.data}');
         print('HEADERS: ${e.response?.headers}');
       } else {
@@ -206,6 +160,6 @@ class DioMini extends IDioMini {
         print(e.message);
       }
     }
-    return models;
+    return null;
   }
 }
