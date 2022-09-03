@@ -1,3 +1,7 @@
+# example
+
+```dart
+
 // ignore_for_file: avoid_print
 
 import 'package:example/students_model.dart';
@@ -98,4 +102,4 @@ class StudentsModel {
     return data;
   }
 }
-
+```
