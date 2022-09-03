@@ -8,21 +8,8 @@ Also provide you change source code so you can change all code according to your
 
 ## Getting Started Setup
 
+
 ### <span style="color: white"> ***Step-1***</span>
-
-When you using helper ,Be careful.
-Firstly you should define your model class typdef in the IDioMini class.
-
-```dart
-// !!! you must change StudentModel your ModelClass
-typedef ModelClass = ' Your Model Class ' ; // !!!
-// !!!
-```
-(You will got to source code fastly with pressed ctrl and click package name :) )
-
-
-
-### <span style="color: white"> ***Step-2***</span>
 
 Now i will show you labels name and their means
 
@@ -43,20 +30,22 @@ Now i will show you labels name and their means
         example: https://SECRET.mockapi.io/users/name.json
 
 
-## Example
 
-!  <span style="color:red"> Don't go here without doing the first step</span>
+## Understanding Methods
 
 * <span style="color:green"> Firstly define object</span>
 ```dart
-DioMini _helper = DioMini(baseURL: 'Your base URL');
+ModelClass _model = ModelClass(...); // define model class object
+DioMini _helper = DioMini(
+    model: _model,// or you can write like ModelClass(...)
+    baseURL: 'Your base URL');
 ```
 
 * <span style="color:green"> Use getData() method </span>
 ```dart
     final result =
         await _helper.getData('users', '4');
-    print(result?.name);
+    print(result?['name']); // result is a map. I will convert list later.
 ```
 
 * <span style="color:green"> Use getDataList() method </span>
@@ -64,7 +53,7 @@ DioMini _helper = DioMini(baseURL: 'Your base URL');
 ```dart
     final result =
         await service.getDataList('users');
-    print(result?[0].name);
+    print(result); // result is map list. Y will convert list later. :(
 ```
 
 * <span style="color:green"> Use postData() method </span>
